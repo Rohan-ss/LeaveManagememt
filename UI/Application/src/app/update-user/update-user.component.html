@@ -1,0 +1,238 @@
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">User Registration form</h3>
+      </div>
+
+      <div class="row">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          Employee Registration
+          </div></div><div>
+            <div class="main-container">
+              <a *ngFor="let model of userData">
+              <form #f="ngForm"  (ngSubmit)="onSubmit(f)" novalidate>
+                <div class=" row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text" disabled [(ngModel)]="model.reg_no" name="reg_no" class="form-control" placeholder="Registration Number" required>
+                    </div>
+                  </div>
+                  <div class=" dropdown col-md-3">
+                      <select  name="role_id" [(ngModel)]="model.role_id" class="" >
+                        <option  *ngFor="let r of role">{{r.role}}</option>
+                      </select>
+                    </div>
+                </div>
+                <div class=" row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text"   [(ngModel)]="model.fname" name="fname" class="form-control" placeholder="First Name" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.mname" name="mname" class="form-control" placeholder="Middle Name" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.lname" name="lname" class="form-control" placeholder="Last Name" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text"  [(ngModel)]="model.personal_email" name="personal_email" class="form-control" placeholder="Personal Email" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text"  [(ngModel)]="model.opcito_email" name="opcito_email" class="form-control" placeholder="Opcito Email"  required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.contact" name="contact" class="form-control" placeholder="Contact Number" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text"  [(ngModel)]="model.pan_number" name="pan_number" class="form-control" placeholder="Pancard Number"  required>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input type="text"  [(ngModel)]="model.uid_no" name="uid_no" class="form-control" placeholder="User Id Number" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="input-group date">
+                        <input type="date" [(ngModel)]="model.birthdate" name="birthdate" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="radio-inline">
+                        <input type="radio" [(ngModel)]="model.gender" name="gender" value="Male"> Male
+                      </div>
+                      <div class="radio-inline">
+                        <input type="radio" [(ngModel)]="model.gender" name="gender" value="Female"> Female
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="radio-inline">
+                        <input type="radio" [(ngModel)]="model.status" name="status" value="Single"> Single
+                      </div>
+                      <div class="radio-inline">
+                        <input type="radio" [(ngModel)]="model.status" name="status" value="Marride"> Marride
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="input-group date">
+                        <input type="text" [(ngModel)]="model.father_husband_name" name="father_husband_name" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <p>Current Address</p>
+                    <div class="form-group">
+                      <input type="text" name="current_address1" [(ngModel)]="model.current_address1" class="form-control" placeholder="Address Line 1" required>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="current_address2" [(ngModel)]="model.current_address2" class="form-control" placeholder="Address Line 2" required>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="current_address3" [(ngModel)]="model.current_address3" class="form-control" placeholder="Address Line 3" required>
+                    </div>
+                    <div class="form-group">
+                      <select name="current_city" [(ngModel)]="model.current_city" class="form-control">
+                        <option selected>Select city</option>
+                        <option>Nashik</option>
+                        <option>Pune</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <select [(ngModel)]="model.current_state" name="current_state" class="form-control">
+                        <option selected>Select state</option>
+                        <option>Maharashtra</option>
+                        <option>Madhya Pradesh</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="current_pin" [(ngModel)]="model.current_pin"  class="form-control" placeholder="Pincode" required>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <p>Permanent Address</p>
+                    <div class="form-group">
+                      <input type="text" name="permanent_address1" [(ngModel)]="model.permanent_address1" class="form-control" placeholder="Address Line 1" required>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="permanent_address2" [(ngModel)]="model.permanent_address2" class="form-control" placeholder="Address Line 2" required>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="permanent_address3" [(ngModel)]="model.permanent_address3" class="form-control" placeholder="Address Line 3" required>
+                    </div>
+                    <div class="form-group">
+                      <select name="permanent_city" [(ngModel)]="model.permanent_city" class="form-control">
+                        <option selected>Select city</option>
+                        <option>Nashik</option>
+                        <option>Pune</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <select name="state" [(ngModel)]="model.permanent_state" name="permanent_state" class="form-control">
+                        <option selected> Select state </option>
+                        <option>Maharashtra</option>
+                        <option>Madhya Pradesh</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="permanent_pin" [(ngModel)]="model.permanent_pin" class="form-control" placeholder="Pincode" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class=" row">
+                  <div class="col-md-5">
+                    <p>Emergency Contacts :</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.emergency_contact_name1" name="emergency_contact_name1" class="form-control" placeholder="Name">
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.emergency_contact_number2" name="emergency_contact_number2" class="form-control" placeholder="Contact Number">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.emergency_contact_name2" name="emergency_contact_name2" class="form-control" placeholder="Name">
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="text" [(ngModel)]="model.emergency_contact_number1" name="emergency_contact_number1" class="form-control" placeholder="Contact Number">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-5">
+                    <p>Generate Password</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="password" class="form-control" name="password" [(ngModel)]="model.password" placeholder="Password" required>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="password" class="form-control" name="confirm_password" [(ngModel)]="model.password" placeholder="Confirm Password" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-10" align="right">
+                    <button  type="submit" class="btn btn-sm btn-outline-secondary waves-effect">Update</button>
+                    <button  type="reset" class="btn btn-sm btn-outline-secondary waves-effect">Reset</button>
+                  </div>
+                </div>
+              </form>
+              </a>
+            </div>
+
+            <router-outlet></router-outlet>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
