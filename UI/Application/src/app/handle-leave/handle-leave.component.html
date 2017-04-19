@@ -1,3 +1,90 @@
-<p>
-  handle-leave works!
-</p>
+<app-top-nav></app-top-nav>
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">Apply Leave</h3>
+      </div>
+
+      <div  class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              Leave Application
+            </div>
+          </div><div>
+          <div class="main-container table table-bordered panel-body center-block">
+            <form #f="ngForm"  (ngSubmit)="onSubmit(f)" novalidate>
+              <a *ngFor="let data of userData">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" disabled class="form-control" name="reg_no" [(ngModel)]="data.reg_no">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" disabled class="form-control" name="post" [(ngModel)]="data.post">
+                    </div>
+                  </div>
+                </div>
+                <div class=" row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" disabled name="fname" [(ngModel)]="data.fname">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" disabled name="mname" [(ngModel)]="data.mname">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" disabled name="lname" [(ngModel)]="data.lname">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" name="type" [(ngModel)]="data.type">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="date" name="from_date" [ngModel]="data.from_date" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="date" name="to_date" [(ngModel)]="data.to_date" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <textarea name="reason" [(ngModel)]="data.reason" cols="2" rows="2" class="form-control"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <input disabled type="text" name="total_days" [(ngModel)]="data.total_days" >
+                    </div>
+                  </div>
+                </div>
+                <div align="center" class="form-group">
+                  <button type="submit" class="btn btn-adn btn-success" (click)="approve()"  >Approve</button>
+                  <button type="submit" class="btn btn-adn btn-primary" (click)="reject()" >Reject</button>
+                  <button type="submit" class="btn btn-adn btn-warning" >Cancel</button>
+                </div>
+              </a>
+            </form>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

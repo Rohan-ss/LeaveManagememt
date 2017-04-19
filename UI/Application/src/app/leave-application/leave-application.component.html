@@ -1,91 +1,101 @@
-<app-topnav></app-topnav>
-
+<app-top-nav></app-top-nav>
 <div id="page-wrapper">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header">User Registration form</h3>
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="page-header">Apply Leave</h3>
+      </div>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Leave Application
-                        </div>
-                    </div><div>
-                        <div class="main-container">
-                            <form #f="ngForm"  (ngSubmit)="onSubmit(f)" novalidate>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="reg_id" [(ngModel)]="reg_id">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <select class="form-control">
-                                              <option></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class=" row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="fname" [(ngModel)]="fname">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="mname" [(ngModel)]="mname">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="lname" [(ngModel)]="lname">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <select class="form-control">
-                                                <option></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="date" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="date" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <textarea cols="2" rows="2" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <textarea cols="2" rows="2" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn-deep-purple form-control" ></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              Leave Application
             </div>
+          </div><div>
+          <div class="main-container">
+            <form #f="ngForm"  (ngSubmit)="onSubmit(f)"  novalidate>
+              <a *ngFor="let data of userData">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="text" disabled class="form-control" name="reg_no" [(ngModel)]="data.reg_no">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="text" disabled class="form-control" name="role" [(ngModel)]="data.role_id">
+                  </div>
+                </div>
+              </div>
+              <div class=" row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="text" disabled name="fname" [(ngModel)]="data.fname">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="text" disabled name="mname" [(ngModel)]="data.mname">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="text" disabled name="lname" [(ngModel)]="data.lname">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <select  class="form-control" name="type" [(ngModel)]="type">
+                        <option selected>Select Leave Type</option>
+                        <option class="dropdown-item" *ngFor="let r of leaveType">{{r.type}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="date" name="from_date"  [ngModel]="from_date"
+                           class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input type="date" name="to_date" (change)="onchange(f)"
+                           [(ngModel)]="to_date"
+                             class="form-control">
+                  </div>
+                </div>
+                 </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <textarea name="reason" [(ngModel)]="reason" cols="2" rows="2" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <input disabled type="text" name="total_days" [(ngModel)]="total_days" >
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="dropdown-menu-left">
+                    <select [(ngModel)]="selectedValue" name="selectedValue" (ngModelChange)="onDropdownChange($event)">
+                      <option *ngFor="let ld of lead" [ngValue]="ld.id">{{ld.fname+' '+ld.lname}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-success" >Apply</button>
+              </div>
+              </a>
+            </form>
+          </div>
         </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

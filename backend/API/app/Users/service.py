@@ -1,11 +1,22 @@
-import base64
 import time
+from functools import wraps
+
+import flask_restful
+
+from config import SECRET_KEY
+from datetime import datetime,timedelta
+from flask import jsonify,g
+from flask import make_response
 from flask_restful import Resource,request
 from flask_restful import reqparse
 from sqlalchemy import engine
+from jwt import DecodeError,ExpiredSignature
+import jwt
+from werkzeug.security import generate_password_hash,check_password_hash
 
-from app.models import Role, Leave_type, Employee, Permission, Leaves,Employee_Role, Status
+from app.models import Role,Annual_leave, Leave_type, Employee, Permission, Leaves,Employee_Role, Status
 from config import db
+
 # User Validation function
 def validateUser(email,pwd):
     emp=Employee.query.filter_by(opcito_email=email,password=pwd)
@@ -17,6 +28,101 @@ def getRole(role_id):
     for role in R:
         return role.role
 
+def getTotalLeaves():
+    annual_leaves = Annual_leave.query.filter_by(year=2017)
+    for l in annual_leaves:
+        return l.total_leaves
+
+
+def getTakenLeaves(emp_id):
+    taken_leaves = Leaves.query.filter_by(employee_id=emp_id,status_id=1)
+    sum= 0
+    for tl in taken_leaves:
+        sum= sum+  tl.total_days
+    return sum
+
+
+def getStatus(status_id):
+    status = Status.query.filter_by(id=status_id)
+    for st in status:
+        status=st.status
+    return status
+def getLeaveType(leave_id):
+    record = Leave_type.query.filter_by(id=leave_id)
+    for leave in record:
+        return leave.leave_type
+
+def create_token(id):
+    payload = {
+        'sub':id,
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + timedelta(days=1)
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token.decode('unicode_escape')
+
+def parse_token(req):
+    token = req.headers.get('Authorization').split()[1]
+    return jwt.decode(token, SECRET_KEY, algorithms='HS256')
+
+# Login decorator function
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not request.headers.get('Authorization'):
+            response = jsonify(message='Missing authorization header')
+            response.status_code = 401
+            return response
+
+        try:
+            payload = parse_token(request)
+        except DecodeError:
+            response = jsonify(message='Token is invalid')
+            response.status_code = 401
+            return response
+        except ExpiredSignature:
+            response = jsonify(message='Token has expired')
+            response.status_code = 401
+            return response
+
+        g.user_id = payload['sub']
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+class Auth(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('opcito_email', type=str)
+        parser.add_argument('password', type=str)
+        args = parser.parse_args()
+        email = args['opcito_email']
+        password = args['password']
+        user = Employee.query.filter_by(opcito_email=email,password=password)
+        if not user:
+             response = make_response(
+                 jsonify({"message": "invalid username/password"}))
+             response.status_code = 401
+             return response
+        elif user.count()==1 :
+            for a in user:
+                id = a.id
+                rolename = getRole(a.Role_id)
+            token = create_token(id)
+            return {'id':id,'token':token,'role':rolename}
+        else:
+             response = make_response(jsonify({'message':'Invalid Username/password'}))
+             response.status_code = 401
+             return response
+
+#class Resource(flask_restful.Resource):
+ #     method_decorators = [login_required]
+
+
 # For User Validate
 class ValidateUser(Resource):
     def post(self):
@@ -26,12 +132,11 @@ class ValidateUser(Resource):
             parser.add_argument('password',type=str)
             args = parser.parse_args()
             email = args['opcito_email']
-            password = args['password']
-            pwd = base64.b64encode(password)
-            Res=validateUser(email,pwd)
-            return Res
+            pwd = args['password']
+            res=validateUser(email,pwd)
+            return res
         except Exception as e:
-            return {'error':str(e)};
+            return {'error':str(e)}
 
 
 # To Change Password
@@ -48,17 +153,15 @@ class ChangePassword(Resource):
             email = args['opcito_email']
             password = args['password']
             new_password = args['new_password']
-            pwd = base64.b64encode(password)
-            new_pwd = base64.b64encode(new_password)
-            Res = validateUser(email, pwd)
-            if Res == 'True':
-                emp=Employee.query.get
-                emp.password = new_pwd
+            res = validateUser(email, password)
+            if res == 'True':
+                emp=Employee.query.get(id)
+                emp.password = new_password
                 db.session.commit()
                 return "Password Updated"
             else:return "Error"
         except Exception as e:
-                return {'error':str(e)};
+                return {'error':str(e)}
 
 
 # Register New Employee
@@ -143,7 +246,7 @@ class CreateUser(Resource):
             created_by = args['created_by']
             created_date = time.strftime("%Y/%m/%d")
 
-            password = base64.b64encode(password)
+
             empRole = Role.query.filter_by(role=emp_role)
 
             for rol in empRole:
@@ -185,9 +288,10 @@ class CreateUser(Resource):
                            created_by,
                            created_date,
                            )
-            db.session.add(emp);
-            db.session.commit();
-            return {'success':'Record Inserted'}
+            db.session.add(emp)
+            db.session.commit()
+
+            return {'success':'User Registered'}
         except Exception as e:
             return {'Error' : str(e)}
 # To Delete / Terminate Specific Employee
@@ -200,12 +304,14 @@ class DeleteUser(Resource):
             eid = args['id']
             try:
                 Employee.query.filter_by(id=eid).delete()
+                #Leaves.query.filter_by().delete(employee_id=eid)
                 db.session.commit()
                 return "Record Deleted"
             except Exception as e:
                 return {'error':str(e)}
         except Exception as e:
-            return {"error":str(e)};
+            return {"error":str(e)}
+
 
 # To Update Employee Information
 class UpdateUser(Resource):
@@ -336,7 +442,7 @@ class CreatePermission(Resource):
             updated_by = args['updated_by']
             updated_date = args['updated_by']
 
-            r = Permission(id,permission,detail,created_by,created_date,updated_by,updated_date)
+            r = Permission(id, permission, detail, created_by, created_date)
 
             db.session.add(r)
             db.session.commit()
@@ -356,7 +462,8 @@ class DeletePermission(Resource):
                     db.session.commit()
                     return "Record deleted"
                 except Exception as e:
-                    return {"error": str(e)};
+                    return {"error": str(e)}
+
 
 # To store all Employee leaves
 
@@ -372,7 +479,7 @@ class LeaveApplication(Resource):
             parser.add_argument('total_days', type=int)
             parser.add_argument('approval_person', type=str)
             parser.add_argument('approval_date', type=str)
-            parser.add_argument('leave_type_id', type=int)
+            parser.add_argument('leave_type_id', type=str)
             parser.add_argument('status_id', type=int)
             parser.add_argument('employee_id', type=int)
             parser.add_argument('created_by', type=str)
@@ -392,13 +499,20 @@ class LeaveApplication(Resource):
             created_by = args['created_by']
             a = time.strftime("%Y/%m/%d")
             created_date = a
+            status = Status.query.filter_by(status='Pending')
+            for stat in status:
+                status_id = stat.id
+
+            leaveId = Leave_type.query.filter_by(leave_type=leave_type_id)
+            for leave in leaveId:
+                leave_id = leave.id
 
             leaves = Leaves(id,reason,remark,from_date,to_date,total_days,approval_person,approval_date,
-                            leave_type_id,status_id,employee_id,
+                              leave_id,status_id,employee_id,
                             created_by,created_date)
             db.session.add(leaves)
             db.session.commit()
-            return "Leave Application Submitted..."
+            return "Leave Application submitted Successfully"
         except Exception as e:
             return {'error':str(e)}
 
@@ -408,11 +522,11 @@ class CreateStatus(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('status',type=str)
             parser.add_argument('id', type=str)
-            args = parser.parse_args();
-            id = args['id'];
-            status = args['status'];
+            args = parser.parse_args()
+            id = args['id']
+            status = args['status']
             s = Status(id,status)
-            db.session.add(s);
+            db.session.add(s)
             db.session.commit()
             return "Status Add successfully..."
         except Exception as e:
@@ -454,7 +568,7 @@ class DeleteRole(Resource):
             db.session.commit()
             return "Record deleted"
         except Exception as e:
-            return {"error":str(e)};
+            return {"error":str(e)}
 
 
 # To Create Leave Type
@@ -493,6 +607,8 @@ class GetAllUser(Resource):
             list = []
             for e in emp:
                 rolename = getRole(e.Role_id)
+                totalLeaves = getTotalLeaves()
+                takenLeaves = getTakenLeaves(e.id)
                 list.append( {'id':e.id,
                             'reg_no': e.registration_id,
                             'fname':e.first_name,
@@ -523,8 +639,97 @@ class GetAllUser(Resource):
                             'password':e.password,
                             'role_id':rolename,
                             'updated_by':e.updated_by,
+                            'total_leaves': totalLeaves,
+                              'taken_leaves': takenLeaves
                          #   'updated_date':e.updated_date
                             })
+            return list
+
+
+        except Exception as e:
+            return {'error':str(e)}
+
+
+class GetAllLeaves(Resource):
+    def get(self):
+        try:
+            emp = Leaves.query.all()
+            list = []
+            for e in emp:
+                data = Employee.query.filter_by(id=e.employee_id)
+                status = getStatus(e.status_id)
+                for d in data:
+                        list.append({'reg_no': d.registration_id,
+                                     'leaveid': e.id,
+                                     'empid': e.employee_id,
+                                    'fname':d.first_name,
+                                     'mname': d.middle_name,
+                                     'lname': d.last_name,
+                                        'current_status':status
+                             })
+
+            return list
+
+
+        except Exception as e:
+            return {'error':str(e)}
+
+class GetAllLeavesById(Resource):
+    def get(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('id', type=int)
+            args = parser.parse_args()
+            userid = args['id']
+
+            emp = Leaves.query.filter_by(approval_person=userid)
+            list = []
+            for e in emp:
+                data = Employee.query.filter_by(id=e.employee_id)
+                status = getStatus(e.status_id)
+                for d in data:
+                        list.append({'reg_no': d.registration_id,
+                                     'leaveid': e.id,
+                                     'empid': e.employee_id,
+                                    'fname':d.first_name,
+                                     'mname': d.middle_name,
+                                     'lname': d.last_name,
+                                        'current_status':status
+                             })
+
+            return list
+
+
+        except Exception as e:
+            return {'error':str(e)}
+
+class GetUserLeaveInfo(Resource):
+    def get(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('id', type=int)
+            args = parser.parse_args()
+            leaveid = args['id']
+            emp = Leaves.query.filter_by(id=leaveid)
+            list = []
+            for e in emp:
+                data = Employee.query.filter_by(id=e.employee_id)
+                for d in data:
+                        rolename = getRole(d.Role_id)
+                        leave_type=getLeaveType(e.leave_type_id)
+                        list.append({'reg_no': d.registration_id,
+                                     'id': e.employee_id,
+                                    'fname':d.first_name,
+                                     'mname': d.middle_name,
+                                     'lname': d.last_name,
+                                     'from_date': str(e.from_date),
+                                     'to_date': str(e.to_date),
+                                     'total_days': str(e.total_days),
+                                     'reason': e.reason,
+                                     'post': rolename,
+                                     'type': leave_type
+                             })
+
             return list
 
 
@@ -540,6 +745,33 @@ class GetRole(Resource):
             for r in role:
                   list.append( {'id':r.id,
                             'role':r.role})
+            return list
+        except Exception as e:
+            return {'error':str(e)}
+
+class GetAllLead(Resource):
+    def get(self):
+        try:
+            lead = Employee.query.filter_by(Role_id=1)
+            list = []
+
+            for info in lead:
+                  list.append( {'id':info.id,
+                                'fname': info.first_name,
+                                'lname': info.last_name,
+                            })
+            return list
+        except Exception as e:
+            return {'error':str(e)}
+
+class GetLeaveType(Resource):
+    def get(self):
+        try:
+            type = Leave_type.query.all()
+            list = []
+            for t in type:
+                  list.append( {'id':t.id,
+                            'type':t.leave_type})
             return list
         except Exception as e:
             return {'error':str(e)}
@@ -603,8 +835,7 @@ class GetUserByLog(Resource):
             args = parser.parse_args()
             email = args['opcito_email']
             password = args['password']
-            pwd = base64.b64encode(password)
-            emp = Employee.query.filter_by(opcito_email=email,password=pwd)
+            emp = Employee.query.filter_by(opcito_email=email,password=password)
            # emp = Employee.query.all()
             list = []
 
@@ -624,5 +855,35 @@ class GetUserByLog(Resource):
             return list
 
 
+        except Exception as e:
+            return {'error':str(e)}
+
+
+# To update the specific Role
+class UpdateLeaveStatus(Resource):
+    def put(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('id',type=int)
+            parser.add_argument('status', type=str)
+            parser.add_argument('updated_by', type=str)
+            parser.add_argument('updated_date', type=str)
+            a = time.strftime("%Y/%m/%d")
+
+            args = parser.parse_args()
+            id = args['id']
+            stat = args['status']
+
+            status = Status.query.filter_by(status=stat)
+            for st in status:
+                 status_id = st.id
+
+            record = Leaves.query.filter_by(id=id)
+            for re in record:
+                re.status_id= status_id
+                re.updated_by=args['updated_by'],
+                re.updated_date= a
+            db.session.commit()
+            return {'Success':status_id}
         except Exception as e:
             return {'error':str(e)}

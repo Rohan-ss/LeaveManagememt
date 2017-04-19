@@ -30,3 +30,10 @@ export class User
              public contact : string
 )
 {}}
+
+
+export interface Lead {
+    id: string;
+    fname: string;
+    lname: string;
+}

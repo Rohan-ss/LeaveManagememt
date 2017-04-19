@@ -1,5 +1,4 @@
-export class UserAuth
-{
-    constructor(public opcito_email:string,public password: string)
-    {}
+export interface UserAuth {
+    token: string;
+    id: string;
 }

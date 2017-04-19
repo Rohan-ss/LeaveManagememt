@@ -1,19 +1,22 @@
-import { Component,OnInit } from '@angular/core';
-import {CoolHttp,HttpHeader} from 'angular2-cool-http'
+import { Component } from '@angular/core';
+import { LocalStorageService } from 'angular-2-local-storage';
+import {Router} from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
-  coolHttp : CoolHttp;
+export class AppComponent {
 
-  constructor(coolHttp : CoolHttp)
-  {
-      this.coolHttp = coolHttp;
-      this.coolHttp.registerGlobalHeader(new HttpHeader('MyHttpHeader', 'MyHeadersValue'));
+
+  constructor(private localStorageService: LocalStorageService, private router : Router) {
+    const token = localStorage.getItem('token');
+      if (token != null)
+      {
+          this.router.navigate(['home']);
+      }else {
+       this.router.navigate(['login']);
+      }
   }
 
-  ngOnInit()
-  {}
 }

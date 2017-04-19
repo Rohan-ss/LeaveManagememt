@@ -1,38 +1,31 @@
 
-<div class="col-md-4 " >
-<div class="card">
-    <div class="card-block">
-
-        <!--Header-->
-        <div class="form-header  purple darken-4">
-            <h3><i class="fa fa-lock"></i> Login:</h3>
+<div  class="container">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="login-panel panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Please Sign In</h3>
         </div>
-        <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-        <!--Body-->
-        <div class="md-form">
-            <i class="fa fa-envelope prefix"></i>
-            <input type="text" id="form2" [(ngModel)]="opcito_email" name="opcito_email" class="form-control">
-            <label for="form2">Your email</label>
+        <div class="panel-body">
+          <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+            <fieldset>
+              <div class="form-group">
+                <input class="form-control" placeholder="E-mail" [(ngModel)]="opcito_email" name="opcito_email" type="email" required autofocus>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="Password" [(ngModel)]="password" name="password" type="password" required>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                </label>
+              </div>
+              <!-- Change this to a button or input when using this as a form -->
+              <button type="submit"  class="btn btn-lg btn-success btn-block">Login</button>
+            </fieldset>
+          </form>
         </div>
-
-        <div class="md-form">
-            <i class="fa fa-lock prefix"></i>
-            <input type="password" id="form4" [(ngModel)]="password" name="password" class="form-control">
-            <label for="form4">Your password</label>
-        </div>
-
-        <div class="text-center">
-            <button type="submit" class="btn btn-deep-purple">Login</button>
-        </div>
-        </form>
+      </div>
     </div>
-
-    <!--Footer-->
-    <div class="modal-footer">
-        <div class="options">
-            <p>Not a member? <a href="#">Sign Up</a></p>
-            <p>Forgot <a href="#">Password?</a></p>
-        </div>
-    </div>
-
-</div></div>
+  </div>
+</div>

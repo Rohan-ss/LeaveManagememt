@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "application"
+    "name": "app"
   },
   "apps": [
     {
@@ -19,18 +19,15 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": ["../src/assets/vendor/bootstrap/css/bootstrap.min.css",
-        "../src/assets/MDB/css/mdb.min.css",
         "../src/assets/vendor/metisMenu/metisMenu.min.css",
         "../src/assets/dist/css/sb-admin-2.css",
-        "../node_modules/font-awesome/css/font-awesome.min.css",
+        "../src/assets/vendor/font-awesome/css/font-awesome.min.css",
         "styles.css"
-         ],
+      ],
       "scripts": ["../src/assets/vendor/jquery/jquery.min.js",
         "../src/assets/vendor/bootstrap/js/bootstrap.min.js",
         "../src/assets/vendor/metisMenu/metisMenu.min.js",
-        "../src/assets/dist/js/sb-admin-2.js",
-        "../src/assets/MDB/js/mdb.min.js"
-        ],
+        "../src/assets/dist/js/sb-admin-2.js"],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
