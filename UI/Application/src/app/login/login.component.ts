@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   pwd: string;
   userId: string;
   userInfo: UserAuth[];
+  auth_data: UserAuth;
   status: boolean ;
   constructor(private _authUser: WebServicesService,
               private localStorageService: LocalStorageService,
@@ -34,26 +35,19 @@ export class LoginComponent implements OnInit {
           password: this.pwd
         };
     this._authUser.validateUser(this.UserAuth1).subscribe(
-        data => localStorage.setItem('uid', JSON.stringify(data)) ,
-        error => alert(error),
-        () => console.log('finish')
-  );
-    try {
-      const currentUser = JSON.parse(localStorage.getItem('uid'));
-      var userImfo = currentUser.id;
-      const token = currentUser.token;
-      const role = currentUser.role;
-      localStorage.setItem('id', userImfo);
-      localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
-    } catch (Exception) {
-      console.log(Exception);
-    }
-    if (userImfo) {
-      this._router.navigate(['home']);
-    } else {
-      this._router.navigate(['login']);
-    }
+        data => {
+                    if (data) {
+                        JSON.stringify(data)
+                         localStorage.setItem('id',data['id'])
+                        localStorage.setItem('role',data['role'])
+                        localStorage.setItem('token',data['token'])
+                        this._router.navigate(['home']);
+
+                        // console.log(this._authUser.getUserId());
+                    }
+        },(error:any) => alert(error)
+    );
   }
+
 }
 

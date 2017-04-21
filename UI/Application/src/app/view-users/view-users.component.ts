@@ -11,7 +11,8 @@ import {Router} from '@angular/router';
 export class ViewUsersComponent implements OnInit {
   user: ViewUser[];
   userid: string;
-  constructor(private _userService: WebServicesService, private _router: Router) {
+  constructor(private _userService: WebServicesService,
+              private _router: Router) {
        this._userService.getAllUser().subscribe(
       posts => JSON.stringify(this.user = posts));
 

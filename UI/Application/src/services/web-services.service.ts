@@ -146,4 +146,49 @@ export class WebServicesService {
         {headers: headers}).map(res => res.json());
   }
 
+  setContext(authModel) {
+    console.log(authModel);
+    // Cookie.set('isLoggedIn', 'true', 0);
+    // Cookie.set('userName', authModel.first_name , 0);
+    // Cookie.set('email', authModel.email, 0);
+    // Cookie.set('access_token', authModel.token, 0);
+    // Cookie.set('role', authModel.role_identifier, 0);
+    // Cookie.set('userId', authModel.id, 0);
+    localStorage.setItem('access_token', authModel.token);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('role', authModel.role);
+    localStorage.setItem('userId', authModel.userId);
+  }
+  /**
+   * [Provides access token of current logged in user from session]
+   */
+  getAccessToken() {
+    // return Cookie.get('access_token');
+    return localStorage.getItem('token');
+  }
+
+  setAccessToken(accessToken: any) {
+    // return Cookie.set('access_token', accessToken, 0);
+    localStorage.setItem('access_token', accessToken);
+  }
+
+  getLoggedUserRole() {
+    // return Cookie.get('role');
+    return localStorage.getItem('role');
+  }
+
+  setLoggedUserRole(role: any) {
+    // return Cookie.set('role', role, 0);
+    localStorage.setItem('role', role);
+  }
+
+  getUserId() {
+    // return Cookie.get('userId');
+    return localStorage.getItem('id');
+  }
+
+  setUserId(id: any) {
+    // return Cookie.set('userId', userId, 0);
+    localStorage.setItem('userId', id);
+  }
 }

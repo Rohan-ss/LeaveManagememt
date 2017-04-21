@@ -100,10 +100,10 @@
           <li>
             <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
           </li>
-          <li>
+          <li *ngIf="role == adminUser">
             <a routerLink="/LeaveApplications"><i class="fa fa-dashboard fa-fw"></i> Leave Applications</a>
           </li>
-          <li>
+          <li *ngIf="role == leadUser">
             <a routerLink="/LeaveApplication1"><i class="fa fa-dashboard fa-fw"></i> Lead Leave Applications</a>
           </li>
 
@@ -117,7 +117,7 @@
             <a routerLink="/registerUser"><i class="fa fa-edit fa-fw"></i> Register Employee</a>
           </li>
           <li *ngIf="role == adminUser">
-            <a href="#"><i class="fa fa-wrench fa-fw"></i> Update Elements<span class="fa arrow"></span></a>
+            <a><i class="fa fa-wrench fa-fw"></i> Update Elements<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
               <li>
                 <a routerLink="/createRole">Create New Role</a>
