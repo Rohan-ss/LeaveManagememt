@@ -1,0 +1,50 @@
+<app-top-nav></app-top-nav>
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="page-header">User Registration form</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-9">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              Holoday Calendar
+            </div>
+            <div class="main-container">
+              <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+                  <div class="form-group">
+                      <h4 class="card-title">Create Holiday</h4>
+                      <div class="col-md-3">
+                      <input type="date" date placeholder="Select Date" class="form-control" name="holiday" [(ngModel)]="holiday">
+                      </div>
+                      <div class="col-md-3">
+                        <input type="text"  placeholder="Description" class="form-control" name="description" [(ngModel)]="description">
+                      </div>
+                        <button type="submit" class="btn btn-primary">Create Holiday</button>
+               </div>
+            </form>
+            </div>
+            </div>
+        </div>
+      </div>
+        <div class="row col-lg-6">
+            <table class="table table-bordered  col-md-3">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Holiday</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let hd of holidayCal">
+                    <td>{{hd.date}}</td>
+                    <td>{{hd.tag}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>

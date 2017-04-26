@@ -56,7 +56,6 @@ export class LeaveApplicationComponent implements OnInit {
       this.total_days = this.diffDays;
 
   }
-
   onSubmit(f: NgForm) {
     this.data = {
       employee_id: this.userId,

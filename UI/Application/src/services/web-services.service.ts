@@ -102,6 +102,12 @@ export class WebServicesService {
     return this._http.get('http://localhost:5000/api/v1/GetRole').map(res => res.json());
 
   }
+  getHolidays()
+  {
+
+    return this._http.get('http://localhost:5000/api/v1/getHoliday').map(res => res.json());
+
+  }
   getLeaveType()
   {
 
@@ -115,6 +121,15 @@ export class WebServicesService {
     headers.append('Content-Type', 'application/json');
     var body = JSON.stringify(data1)
     return this._http.post('http://localhost:5000/api/v1/CreateRole',
+        body,
+        {headers: headers}).map(res => res.json());
+  }
+  createHoliday(data1)
+  {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    var body = JSON.stringify(data1)
+    return this._http.post('http://localhost:5000/api/v1/createHoliday',
         body,
         {headers: headers}).map(res => res.json());
   }

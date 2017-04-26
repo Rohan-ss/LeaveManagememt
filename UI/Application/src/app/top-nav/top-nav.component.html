@@ -98,7 +98,7 @@
         <ul class="nav" id="side-menu">
 
           <li>
-            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+            <a routerLink="/home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
           </li>
           <li *ngIf="role == adminUser">
             <a routerLink="/LeaveApplications"><i class="fa fa-dashboard fa-fw"></i> Leave Applications</a>
@@ -125,6 +125,9 @@
               <li>
                 <a routerLink="/createLeaveType">Create New Leave Type</a>
               </li>
+                <li>
+                    <a routerLink="/createHoliday">Create Holiday</a>
+                </li>
             </ul>
             <!-- /.nav-second-level -->
           </li>

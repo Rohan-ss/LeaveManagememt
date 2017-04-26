@@ -4,6 +4,7 @@ import {WebServicesService} from '../../services/web-services.service';
 import {Role} from '../models/Role';
 import {User} from '../models/user';
 
+import {Validators, FormControl, FormGroup} from '@angular/forms';
 @Component({
   selector: 'app-register-user',
   templateUrl: './register-user.component.html',
@@ -11,18 +12,19 @@ import {User} from '../models/user';
 })
 export class RegisterUserComponent implements OnInit {
   data = {};
-  public role : Role[];
-  model = new User('', '', '', '', '', '', '', '', '', '', '', '', '',
+  city = ['Nashik','Mumbail','Nagpur']
+  public role: Role[];
+/*  model = new User('', '', '', '', '', '', '', '', '', '', '', '', '',
       '', '', '', '', '', '', '', '', '', '',
-      '', '', '', '', '', '');
-  constructor(private _createUser : WebServicesService) {
+      '', '', '', '', '', '');*/
+  model: User;
+  constructor(private _createUser: WebServicesService) {
     this._createUser = _createUser;
     this._createUser.getRole().subscribe(data => this.role = data);
+    this.model = new User();
   }
-  onSubmit(f: NgForm)
-  {
-    try
-    {
+  onSubmit(f: NgForm) {
+    try {
       this.data = {
         emp_role : f.form.controls['role_id'].value,
         registration_id : f.form.controls['reg_no'].value,
@@ -62,9 +64,7 @@ export class RegisterUserComponent implements OnInit {
           error => alert(error),
           () => console.log('finish')
       );
-    }
-    catch (error)
-    { alert(error); }
+    } catch (error) { alert(error); }
 
   }
   ngOnInit() {

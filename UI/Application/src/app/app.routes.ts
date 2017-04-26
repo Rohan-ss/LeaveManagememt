@@ -10,6 +10,7 @@ import {HomeComponent} from './home/home.component';
 import {CreateRoleComponent} from './create-role/create-role.component';
 import {CreateLeaveTypeComponent} from './create-leave-type/create-leave-type.component';
 import {TopNavComponent} from './top-nav/top-nav.component';
+import {HolidayCalendarComponent} from './holiday-calendar/holiday-calendar.component';
 import {HandleLeavesByLeadComponent} from './handle-leaves-by-lead/handle-leaves-by-lead.component';
 const appRoutes: Routes = [
     {path : '' , redirectTo : 'login', pathMatch: 'full'},
@@ -25,7 +26,8 @@ const appRoutes: Routes = [
     {path : 'createLeaveType', component: CreateLeaveTypeComponent},
     {path : 'topNav', component: TopNavComponent},
     {path : 'applyLeave', component: LeaveApplicationComponent},
-    {path : 'LeaveApplication1', component: HandleLeavesByLeadComponent}
+    {path : 'LeaveApplication1', component: HandleLeavesByLeadComponent},
+    {path : 'createHoliday', component: HolidayCalendarComponent}
     ];
 export const routing = RouterModule.forRoot(appRoutes);
 

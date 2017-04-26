@@ -21,6 +21,8 @@ import { HomeComponent } from './home/home.component';
 import { CreateRoleComponent } from './create-role/create-role.component';
 import { CreateLeaveTypeComponent } from './create-leave-type/create-leave-type.component';
 import { HandleLeavesByLeadComponent } from './handle-leaves-by-lead/handle-leaves-by-lead.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import { HolidayCalendarComponent } from './holiday-calendar/holiday-calendar.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,13 +37,15 @@ import { HandleLeavesByLeadComponent } from './handle-leaves-by-lead/handle-leav
     HomeComponent,
     CreateRoleComponent,
     CreateLeaveTypeComponent,
-    HandleLeavesByLeadComponent
+    HandleLeavesByLeadComponent,
+    HolidayCalendarComponent
   ],
   imports: [
     LocalStorageModule.withConfig({
       prefix: 'my-app',
       storageType: 'localStorage'
     }),
+    ReactiveFormsModule,
     routing,
     BrowserAnimationsModule,
     MaterialModule.forRoot(),

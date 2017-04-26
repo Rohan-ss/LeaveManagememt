@@ -47,12 +47,12 @@
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <input type="text"  [(ngModel)]="model.personal_email" name="personal_email" class="form-control" placeholder="Personal Email" required>
+                      <input type="email"  [(ngModel)]="model.personal_email" name="personal_email"  class="form-control" placeholder="Personal Email" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <input type="text"  [(ngModel)]="model.opcito_email" name="opcito_email" class="form-control" placeholder="Opcito Email"  required>
+                      <input type="email"  [(ngModel)]="model.opcito_email" name="opcito_email" class="form-control" placeholder="Opcito Email"  required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -64,7 +64,7 @@
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
-                      <input type="text"  [(ngModel)]="model.pan_number" name="pan_number" class="form-control" placeholder="Pancard Number"  required>
+                      <input type="number"  [(ngModel)]="model.pan_number" name="pan_number" class="form-control" placeholder="Pancard Number"  required>
                     </div>
                   </div>
 
@@ -122,11 +122,10 @@
                     <div class="form-group">
                       <input type="text" name="current_address3" [(ngModel)]="model.current_address3" class="form-control" placeholder="Address Line 3" required>
                     </div>
-                    <div class="form-group">
-                      <select name="current_city" [(ngModel)]="model.current_city" class="form-control">
-                        <option selected>Select city</option>
-                        <option>Nashik</option>
-                        <option>Pune</option>
+                    <div class="dropdown form-group  col-md-3">
+                      <select name="current_city" [(ngModel)]="model.current_city" >
+                        <option selected>Select City</option>
+                        <option class="dropdown-item" *ngFor="let c of city">{{c}}</option>
                       </select>
                     </div>
                     <div class="form-group">

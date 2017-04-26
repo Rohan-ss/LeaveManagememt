@@ -22,6 +22,7 @@
                   <th>First Name</th>
                   <th>Middle Name</th>
                   <th>Last Name</th>
+                  <th>Date</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -32,9 +33,9 @@
                   <td>{{leave.fname}}</td>
                   <td>{{leave.mname}}</td>
                   <td>{{leave.lname}}</td>
+                  <td>{{leave.date}}</td>
                   <td>{{leave.current_status}}</td>
                   <td align="center" >
-                    <a class="red-text" (click)="deleteUser(leave.leaveid)"><i class="fa fa-times"></i></a>
                     <a class="teal-text" (click)="updateUser(leave.leaveid)"><i class="fa fa-pencil"></i></a>
                   </td>
                 </tr>
@@ -55,5 +56,6 @@
     <!-- /.container-fluid -->
   </div>
 </div>
+
 
 <!-- /#page-wrapper -->

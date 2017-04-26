@@ -13,5 +13,6 @@ export interface LeaveInfo {
     from_date: string;
     to_date: string;
     total_days: string;
+    date: string;
     current_status: string;
 }

@@ -12,12 +12,13 @@ export class TopNavComponent implements OnInit {
   leadUser: string;
   hrUser: string;
   adminUser: string;
-
+  softwareEmgineer: string;
   constructor(private _router: Router,
               private localStorageService: LocalStorageService) {
     this.leadUser = 'Lead';
     this.hrUser = 'HR Manager';
     this.adminUser = 'Admin';
+    this.softwareEmgineer = 'Software engineer'
     const token = localStorage.getItem('token');
     if (token != null) {
       this.hiddenn = true;
