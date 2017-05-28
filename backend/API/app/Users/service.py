@@ -14,7 +14,8 @@ from jwt import DecodeError,ExpiredSignature
 import jwt
 from werkzeug.security import generate_password_hash,check_password_hash
 
-from app.models import Role,Annual_leave, Leave_type, Employee, Permission, Leaves,Employee_Role, Status
+from app.models import Role,Annual_leave, Leave_type, Employee, Permission, Leaves,Employee_Role, Status, Admin
+from app.models import HolidayCalendar;
 from config import db
 
 # User Validation function
@@ -103,7 +104,8 @@ class Auth(Resource):
         email = args['opcito_email']
         password = args['password']
         user = Employee.query.filter_by(opcito_email=email,password=password)
-        if not user:
+        admin = Admin.query.filter_by(opcito_email=email,password=password)
+        if not user or not admin:
              response = make_response(
                  jsonify({"message": "invalid username/password"}))
              response.status_code = 401
@@ -114,13 +116,18 @@ class Auth(Resource):
                 rolename = getRole(a.Role_id)
             token = create_token(id)
             return {'id':id,'token':token,'role':rolename}
+        elif admin.count()==1 :
+            for a in admin:
+                id = a.id
+            token = create_token(id)
+            return {'id':id,'token':token,'role':'Admin'}
         else:
              response = make_response(jsonify({'message':'Invalid Username/password'}))
              response.status_code = 401
              return response
 
 #class Resource(flask_restful.Resource):
- #     method_decorators = [login_required]
+#       method_decorators = [login_required]
 
 
 # For User Validate
@@ -555,6 +562,32 @@ class CreateRole(Resource):
         except Exception as e:
             return {'error': str(e)}
 
+# Create Role
+class CreateHoliday(Resource):
+    def post(self):
+        try:
+                parser = reqparse.RequestParser()
+                parser.add_argument('id', type=int)
+                parser.add_argument('date', type=str)
+                parser.add_argument('tag', type=str)
+                parser.add_argument('created_by', type=str)
+                parser.add_argument('created_date', type=str)
+
+                ## yyyy/mm/dd format
+                a = time.strftime("%Y/%m/%d")
+                args = parser.parse_args()
+                id = args['id']
+                date = args['date']
+                tag = args['tag']
+                created_by = args['created_by']
+                created_date = a
+                holiday = HolidayCalendar(id,date, tag, created_by, created_date)
+                db.session.add(holiday)
+                db.session.commit()
+                return " Holiday Added"
+        except Exception as e:
+            return {'error': str(e)}
+
 
 # To Delete the Role
 class DeleteRole(Resource):
@@ -665,6 +698,7 @@ class GetAllLeaves(Resource):
                                     'fname':d.first_name,
                                      'mname': d.middle_name,
                                      'lname': d.last_name,
+                                     'date': str(e.created_date),
                                         'current_status':status
                              })
 
@@ -731,8 +765,37 @@ class GetUserLeaveInfo(Resource):
                              })
 
             return list
+        except Exception as e:
+            return {'error':str(e)}
 
+class PreviousLeaveInfo(Resource):
+    def get(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('id', type=int)
+            args = parser.parse_args()
+            empid = args['id']
+            emp = Leaves.query.filter_by(employee_id = empid)
+            list = []
+            for e in emp:
+                data = Employee.query.filter_by(id=e.employee_id)
+                for d in data:
+                        rolename = getRole(d.Role_id)
+                        leave_type=getLeaveType(e.leave_type_id)
+                        list.append({'reg_no': d.registration_id,
+                                     'id': e.employee_id,
+                                    'fname':d.first_name,
+                                     'mname': d.middle_name,
+                                     'lname': d.last_name,
+                                     'from_date': str(e.from_date),
+                                     'to_date': str(e.to_date),
+                                     'total_days': str(e.total_days),
+                                     'reason': e.reason,
+                                     'post': rolename,
+                                     'type': leave_type
+                             })
 
+            return list
         except Exception as e:
             return {'error':str(e)}
 
@@ -745,6 +808,19 @@ class GetRole(Resource):
             for r in role:
                   list.append( {'id':r.id,
                             'role':r.role})
+            return list
+        except Exception as e:
+            return {'error':str(e)}
+
+class GetHolidays(Resource):
+    def get(self):
+        try:
+            holiday = HolidayCalendar.query.all()
+            list = []
+
+            for r in holiday:
+                  list.append( {'date':str(r.date),
+                            'tag':r.tag})
             return list
         except Exception as e:
             return {'error':str(e)}

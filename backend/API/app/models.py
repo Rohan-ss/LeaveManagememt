@@ -2,6 +2,19 @@
 from config import db
 
 
+# Admin table
+
+
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    opcito_email = db.Column(db.String(15))
+    password = db.Column(db.VARCHAR(15))
+
+    def __init__(self, opcito_email, password):
+        self.opcito_email = opcito_email
+        self.password = password
+
+
 # Employee Table
 
 
@@ -135,6 +148,23 @@ class Role(db.Model):
         self.role = role
         self.created_by = created_by
         self.created_date = created_date
+
+# Role table
+class HolidayCalendar(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        date = db.Column(db.Date)
+        tag = db.Column(db.String(15))
+        created_by = db.Column(db.VARCHAR(15))
+        created_date = db.Column(db.Date)
+        updated_by = db.Column(db.VARCHAR(15))
+        updated_date = db.Column(db.Date)
+
+        def __init__(self, id,date, tag, created_by, created_date):
+            self.id = id
+            self.date = date
+            self.tag = tag
+            self.created_by = created_by
+            self.created_date = created_date
 
 
 # Permission Table
@@ -276,3 +306,9 @@ class Total_leaves(db.Model):
 
 
 db.create_all()
+if db.session.query(Admin).filter_by(opcito_email='admin').first():
+  pass
+else:
+  a = Admin(opcito_email='admin',password='YWRtaW4=')
+  db.session.add(a)
+  db.session.commit()

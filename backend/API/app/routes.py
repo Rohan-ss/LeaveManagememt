@@ -1,8 +1,8 @@
 from config import api
 from Users.service import Auth, GetAllLeaves, GetUserByLog, CreateRole, DeleteRole, CreateUser, DeleteUser, \
-    CreatePermission, DeletePermission, GetUser
+    CreatePermission, DeletePermission, CreateHoliday, GetUser
 from Users.service import  GetAllLead, UpdateLeaveStatus, GetUserLeaveInfo, GetLeaveType, CreateStatus, \
-    LeaveApplication, GetRole,GetAllLeavesById, CreateLeave, GetAllUser, UpdateRole, UpdateUser, ValidateUser, ChangePassword
+    LeaveApplication, PreviousLeaveInfo, GetRole,GetAllLeavesById,GetHolidays, CreateLeave, GetAllUser, UpdateRole, UpdateUser, ValidateUser, ChangePassword
 from jwt import DecodeError, ExpiredSignature
 import jwt
 
@@ -34,7 +34,10 @@ api.add_resource(GetAllLeavesById, '/api/v1/GetAllLeavesByLead')
 api.add_resource(LeaveApplication, '/api/v1/LeaveApplication')
 api.add_resource(GetLeaveType, '/api/v1/GetLeaves')
 api.add_resource(GetUserLeaveInfo, '/api/v1/GetUserLeaveInfo')
+api.add_resource(PreviousLeaveInfo, '/api/v1/PreviousLeaveInfo')
 api.add_resource(UpdateLeaveStatus, '/api/v1/HandleLeave')
 api.add_resource(GetAllLead, '/api/v1/GetAllLead')
 
 api.add_resource(Auth, '/api/v1/Login')
+api.add_resource(CreateHoliday, '/api/v1/createHoliday')
+api.add_resource(GetHolidays, '/api/v1/getHoliday')

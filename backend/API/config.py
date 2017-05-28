@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/opcito'
 SECRET_KEY = 'opcitotechnologies'
